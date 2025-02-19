@@ -7,10 +7,18 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  
+  reporter: [
+    ['html', { outputFolder: 'playwright-report' }],
+    ['json', { outputFile: 'playwright-report/report.json' }]
+  ],
+
   use: {
       baseURL: 'https://www.saucedemo.com',
       headless: true,
+      screenshot: 'only-on-failure',
+      trace: 'on-first-retry',
+      video: 'retain-on-failure', 
   },
 
   projects: [
