@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { products } from "../data/products";
+import logger from "../helper/logger";
 
 export class InventoryPage {
   readonly page: Page;
@@ -20,11 +21,14 @@ export class InventoryPage {
   }
 
   async addToCart(product: string) {
+    logger.info(`Adding '${product}' to cart...`);
     const productLocator = this.addToCartButtons[product];
     await productLocator.click();
+    logger.info(`Added '${product}' to cart successfully.`);
   }
 
   async goToCart() {
+    logger.info("Navigating to cart...");
     await this.cartIcon.click();
   }
 }

@@ -1,4 +1,5 @@
 import { Locator, Page } from "@playwright/test";
+import logger from "../helper/logger";
 
 export class CheckoutPage {
   readonly page: Page;
@@ -46,16 +47,20 @@ export class CheckoutPage {
     lastName: string,
     postalCode: string
   ) {
+    logger.info(`Filling checkout details - Name: ${firstName} ${lastName}, Postal Code: ${postalCode}`);
     await this.firstNameField.fill(firstName);
     await this.lastNameField.fill(lastName);
     await this.postalCodeField.fill(postalCode);
   }
 
   async continueCheckout() {
+    logger.info("Continuing to next checkout step...");
     await this.continueButton.click();
 }
 
   async completePurchase() {
+    logger.info("Completing purchase...");
     await this.finishButton.click();
+    logger.info("Purchase completed!");
   }
 }

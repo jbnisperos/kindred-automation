@@ -4,6 +4,7 @@ import { InventoryPage } from "../pages/inventoryPage";
 import { CartPage } from "../pages/cartPage";
 import { CheckoutPage } from "../pages/checkoutPage";
 import { products } from "../data/products";
+import logger from "../helper/logger";
 
 const testData = {
   firstName: "Ervin",
@@ -21,8 +22,10 @@ const productList = [
 ];
 
 test.beforeEach(async ({ page }) => {
+  logger.info("Starting new test execution...");
   await login(page);
   await expect(page).toHaveURL(/inventory/);
+  logger.info("Navigated to the home page.");
 });
 
 test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
@@ -32,7 +35,7 @@ test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
 
   // Pick a random product
   const selectedProduct = productList[Math.floor(Math.random() * productList.length)];
-  console.log(`🔍 Selected product: ${selectedProduct}`);
+  logger.info(`Selected product: ${selectedProduct}`);
   const product = products[selectedProduct]; 
   // Add an item to the cart
   await inventoryPage.addToCart(selectedProduct);
@@ -41,6 +44,7 @@ test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
 
   // Verify cart item is correct
   await expect(page.getByText(product.name, { exact: true })).toBeVisible();
+  logger.info(`Verified cart contains: ${product.name}`);
   await expect(page.getByText(product.description)).toBeVisible();
   await expect(page.getByText(product.price)).toBeVisible();
   const quantity = await cartPage.getItemQuantity();
@@ -78,6 +82,7 @@ test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
   await expect(checkoutPage.orderConfirmationHeader).toHaveText(
     "Thank you for your order!"
   );
+  logger.info("Order confirmation verified.");
   await expect(checkoutPage.orderConfirmationMessage).toHaveText(
     "Your order has been dispatched, and will arrive just as fast as the pony can get there!"
   );
