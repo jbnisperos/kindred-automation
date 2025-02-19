@@ -3,6 +3,14 @@ steps:
     command:
       - export $(grep -v '^#' .env | xargs)
       - npm install
-      - npx playwright test
+      - mkdir -p logs
+      - npx playwright test | tee logs/playwright-test.log
     agents:
       queue: "default"
+    artifact_paths:
+      - "logs/*.log"
+      - "playwright-report/**"
+      - "test-results/**"
+      - "**/*.png"
+      - "**/*.mp4"
+      - "trace.zip"
