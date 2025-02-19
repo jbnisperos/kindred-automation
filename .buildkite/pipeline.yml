@@ -1,0 +1,5 @@
+steps:
+  - label: ":playwright: Run Playwright Tests"
+    command: "npm install && npx playwright test"
+    agents:
+      queue: "default"
