@@ -1,5 +1,8 @@
 steps:
   - label: ":playwright: Run Playwright Tests"
-    command: "export $(grep -v '^#' .env | xargs) && npm install && npx playwright test"
+    command:
+      - export $(grep -v '^#' .env | xargs)
+      - npm install
+      - npx playwright test
     agents:
       queue: "default"
