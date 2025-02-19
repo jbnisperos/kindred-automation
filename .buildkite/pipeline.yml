@@ -4,7 +4,7 @@ steps:
       - export $(grep -v '^#' .env | xargs)
       - npm install
       - mkdir -p logs
-      - npx playwright test | tee logs/playwright-test.log
+      - npm test | tee logs/playwright-test.log
     agents:
       queue: "default"
     artifact_paths:
