@@ -1,12 +1,9 @@
 steps:
   - label: ":playwright: Run Playwright Tests"
     command:
-      - 'export USERNAME=$(buildkite-agent secret get USERNAME)'
-      - 'export PASSWORD=$(buildkite-agent secret get PASSWORD)'
+      - 'export USERNAME=$(buildkite-agent secret get USERNAME) && export PASSWORD=$(buildkite-agent secret get PASSWORD)'
       - 'npm install'
       - 'mkdir -p logs'
-      - 'echo "USERNAME: ${USERNAME:-NOT FOUND}"'
-      - '[ -z "${PASSWORD}" ] && echo "PASSWORD: NOT SET" || echo "PASSWORD: ********"'
       - 'npm test | tee logs/playwright-test.log || exit 1'
     agents:
       queue: "default"
