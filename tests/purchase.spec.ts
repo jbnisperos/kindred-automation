@@ -28,21 +28,22 @@ test.beforeEach(async ({ page }) => {
   logger.info("Navigated to the home page.");
 });
 
-test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
+test("Successful purchase of any one of the listed products", async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
   const cartPage = new CartPage(page);
   const checkoutPage = new CheckoutPage(page);
 
-  // Pick a random product
+  // Select a random product to purchase
   const selectedProduct = productList[Math.floor(Math.random() * productList.length)];
   logger.info(`Selected product: ${selectedProduct}`);
   const product = products[selectedProduct]; 
-  // Add an item to the cart
+
+  // Add the selected product to the cart
   await inventoryPage.addToCart(selectedProduct);
   await inventoryPage.goToCart();
   await expect(page).toHaveURL(/cart/);
 
-  // Verify cart item is correct
+  // Verify the product details in the cart
   await expect(page.getByText(product.name, { exact: true })).toBeVisible();
   logger.info(`Verified cart contains: ${product.name}`);
   await expect(page.getByText(product.description)).toBeVisible();
@@ -50,7 +51,7 @@ test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
   const quantity = await cartPage.getItemQuantity();
   expect(quantity).toBe("1");
 
-  // Proceed to checkout
+  // Proceed with the checkout process
   await cartPage.proceedToCheckout();
   await checkoutPage.fillCheckoutDetails(
     testData.firstName,
@@ -59,7 +60,7 @@ test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
   );
   await checkoutPage.continueCheckout();
 
-  // Verify checkout overview
+  // Verify product details on the checkout overview page
   await expect(page.getByText(product.name, { exact: true })).toBeVisible();
   await expect(page.getByText(product.description)).toBeVisible();
   await expect(page.getByText(product.price).nth(0)).toBeVisible();
@@ -75,9 +76,10 @@ test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
   await expect(checkoutPage.taxLabel).toBeVisible();
   await expect(checkoutPage.totalLabel).toBeVisible();
 
+  // Complete the purchase
   await checkoutPage.completePurchase();
 
-  // Verify order completion
+  // Verify order confirmation
   await expect(checkoutPage.checkmarkIcon).toBeVisible();
   await expect(checkoutPage.orderConfirmationHeader).toHaveText(
     "Thank you for your order!"
@@ -87,6 +89,7 @@ test("Successful purchase Sauce Labs Backpack", async ({ page }) => {
     "Your order has been dispatched, and will arrive just as fast as the pony can get there!"
   );
 
+  // Return to the inventory page
   await checkoutPage.backToHomeButton.click();
   await expect(page).toHaveURL(/inventory/);
 });
