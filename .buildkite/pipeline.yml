@@ -1,7 +1,6 @@
 steps:
   - label: ":playwright: Run Playwright Tests"
     command:
-      - export $(grep -v '^#' .env | xargs)
       - npm install
       - mkdir -p logs
       - npm test | tee logs/playwright-test.log
@@ -14,3 +13,6 @@ steps:
       - "**/*.png"
       - "**/*.mp4"
       - "trace.zip"
+env:
+      USERNAME: "$USERNAME"
+      PASSWORD: "$PASSWORD"
