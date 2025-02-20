@@ -3,7 +3,9 @@ steps:
     command:
       - npm install
       - mkdir -p logs
-      - npm test | tee logs/playwright-test.log
+      - 'echo "USERNAME: $USERNAME"'
+      - 'if [ -z "$PASSWORD" ]; then echo "PASSWORD: NOT SET"; else echo "PASSWORD: ********"; fi'
+      - USERNAME=$USERNAME PASSWORD=$PASSWORD npm test | tee logs/playwright-test.log
     agents:
       queue: "default"
     artifact_paths:
@@ -13,6 +15,6 @@ steps:
       - "**/*.png"
       - "**/*.mp4"
       - "trace.zip"
-env:
+    env:
       USERNAME: "$USERNAME"
       PASSWORD: "$PASSWORD"
