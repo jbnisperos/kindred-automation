@@ -1,11 +1,13 @@
 steps:
   - label: ":playwright: Run Playwright Tests"
     command:
-      - npm install
-      - mkdir -p logs
-      - 'echo "USERNAME: $USERNAME"'
-      - 'if [ -z "$PASSWORD" ]; then echo "PASSWORD: NOT SET"; else echo "PASSWORD: ********"; fi'
-      - USERNAME=$USERNAME PASSWORD=$PASSWORD npm test | tee logs/playwright-test.log
+      - 'export USERNAME=$(buildkite-agent secret get USERNAME)'
+      - 'export PASSWORD=$(buildkite-agent secret get PASSWORD)'
+      - 'npm install'
+      - 'mkdir -p logs'
+      - 'echo "USERNAME: ${USERNAME:-NOT FOUND}"'
+      - '[ -z "${PASSWORD}" ] && echo "PASSWORD: NOT SET" || echo "PASSWORD: ********"'
+      - 'npm test | tee logs/playwright-test.log || exit 1'
     agents:
       queue: "default"
     artifact_paths:
@@ -15,6 +17,3 @@ steps:
       - "**/*.png"
       - "**/*.mp4"
       - "trace.zip"
-    env:
-      USERNAME: "$USERNAME"
-      PASSWORD: "$PASSWORD"
