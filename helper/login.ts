@@ -9,6 +9,9 @@ export async function login(page: Page) {
     logger.info('Starting login process...');
     const loginPage = new LoginPage(page);
     await loginPage.navigate('/');
+
+     // Perform login using credentials from environment variables
     await loginPage.login(process.env.USERNAME!, process.env.PASSWORD!);
+    
     logger.info('Login successful.');
 }
